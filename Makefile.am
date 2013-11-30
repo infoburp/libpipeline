@@ -28,6 +28,7 @@ dist_noinst_DATA = NEWS
 
 EXTRA_DIST = \
 	.gitignore \
+	ChangeLog-2013 \
 	autogen.sh \
 	gnulib/m4/gnulib-cache.m4 \
 	gnulib/m4/gnulib-tool.m4 \
@@ -44,3 +45,16 @@ EXTRA_DIST += \
 # http://lists.gnu.org/archive/html/bug-gnulib/2009-03/msg00154.html and
 # thread.
 ACLOCAL_AMFLAGS = -I gnulib/m4 -I m4
+
+dist-hook: gen-ChangeLog
+
+gen_start_date = '2013-11-30 21:08'
+.PHONY: gen-ChangeLog
+gen-ChangeLog:
+	$(AM_V_GEN)if test -d .git; then \
+		$(top_srcdir)/tools/gitlog-to-changelog \
+			--format='%s%n%n%b%n' \
+			--since="$(gen_start_date)" > $(distdir)/cl-t; \
+		rm -f $(distdir)/ChangeLog; \
+		mv $(distdir)/cl-t $(distdir)/ChangeLog; \
+	fi

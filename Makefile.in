@@ -82,10 +82,10 @@ host_triplet = @host@
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
-	$(srcdir)/config.h.in $(dist_noinst_DATA) COPYING ChangeLog \
-	INSTALL NEWS README TODO tools/ar-lib tools/compile \
-	tools/config.guess tools/config.rpath tools/config.sub \
-	tools/depcomp tools/install-sh tools/missing tools/ltmain.sh \
+	$(srcdir)/config.h.in $(dist_noinst_DATA) COPYING INSTALL NEWS \
+	README TODO tools/ar-lib tools/compile tools/config.guess \
+	tools/config.rpath tools/config.sub tools/depcomp \
+	tools/install-sh tools/missing tools/ltmain.sh \
 	$(top_srcdir)/tools/ar-lib $(top_srcdir)/tools/compile \
 	$(top_srcdir)/tools/config.guess \
 	$(top_srcdir)/tools/config.rpath \
@@ -1052,8 +1052,9 @@ dist_noinst_DATA = NEWS
 
 # These macro files are imported by gnulib-tool, but at present not used. We
 # include them in the distribution anyway for maximum consistency.
-EXTRA_DIST = .gitignore autogen.sh gnulib/m4/gnulib-cache.m4 \
-	gnulib/m4/gnulib-tool.m4 release.sh gnulib/m4/math_h.m4
+EXTRA_DIST = .gitignore ChangeLog-2013 autogen.sh \
+	gnulib/m4/gnulib-cache.m4 gnulib/m4/gnulib-tool.m4 release.sh \
+	gnulib/m4/math_h.m4
 
 # Note that autopoint installs into the first directory here. Yes, this
 # means that it installs into gnulib/m4, so we always run gnulib-tool after
@@ -1061,6 +1062,7 @@ EXTRA_DIST = .gitignore autogen.sh gnulib/m4/gnulib-cache.m4 \
 # http://lists.gnu.org/archive/html/bug-gnulib/2009-03/msg00154.html and
 # thread.
 ACLOCAL_AMFLAGS = -I gnulib/m4 -I m4
+gen_start_date = '2013-11-30 21:08'
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -1287,6 +1289,9 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
+	$(MAKE) $(AM_MAKEFLAGS) \
+	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
+	  dist-hook
 	-test -n "$(am__skip_mode_fix)" \
 	|| find "$(distdir)" -type d ! -perm -755 \
 		-exec chmod u+rwx,go+rx {} \; -o \
@@ -1527,20 +1532,31 @@ uninstall-am:
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
 	clean-libtool cscope cscopelist-am ctags ctags-am dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags distcleancheck \
-	distdir distuninstallcheck dvi dvi-am html html-am info \
-	info-am install install-am install-data install-data-am \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-html install-html-am install-info install-info-am \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am
+	dist-all dist-bzip2 dist-gzip dist-hook dist-lzip dist-shar \
+	dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-generic distclean-hdr distclean-libtool \
+	distclean-tags distcleancheck distdir distuninstallcheck dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am
 
+
+dist-hook: gen-ChangeLog
+.PHONY: gen-ChangeLog
+gen-ChangeLog:
+	$(AM_V_GEN)if test -d .git; then \
+		$(top_srcdir)/tools/gitlog-to-changelog \
+			--format='%s%n%n%b%n' \
+			--since="$(gen_start_date)" > $(distdir)/cl-t; \
+		rm -f $(distdir)/ChangeLog; \
+		mv $(distdir)/cl-t $(distdir)/ChangeLog; \
+	fi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

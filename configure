@@ -14181,6 +14181,7 @@ fi
   # Code from module float:
   # Code from module full-write:
   # Code from module gettext-h:
+  # Code from module gitlog-to-changelog:
   # Code from module havelib:
   # Code from module include_next:
   # Code from module intprops:
