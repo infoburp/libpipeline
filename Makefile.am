@@ -27,7 +27,7 @@ endif
 dist_noinst_DATA = NEWS
 
 EXTRA_DIST = \
-	.bzrignore \
+	.gitignore \
 	autogen.sh \
 	gnulib/m4/gnulib-cache.m4 \
 	gnulib/m4/gnulib-tool.m4 \
