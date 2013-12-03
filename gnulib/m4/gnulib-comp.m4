@@ -58,6 +58,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module havelib:
   # Code from module include_next:
   # Code from module intprops:
+  # Code from module largefile:
+  AC_REQUIRE([AC_SYS_LARGEFILE])
   # Code from module lib-ignore:
   # Code from module lock:
   # Code from module malloc-posix:
@@ -165,6 +167,7 @@ AC_DEFUN([gl_INIT],
   fi
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
+  AC_REQUIRE([gl_LARGEFILE])
   gl_IGNORE_UNUSED_LIBRARIES
   gl_LOCK
   gl_MODULE_INDICATOR([lock])
@@ -561,6 +564,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/include_next.m4
   m4/intmax_t.m4
   m4/inttypes_h.m4
+  m4/largefile.m4
   m4/lib-ignore.m4
   m4/lib-ld.m4
   m4/lib-link.m4

@@ -6,6 +6,8 @@ name arguments.
 
 Restore compatibility with Automake 1.10.
 
+Build with large file support on systems where it is available.
+
 libpipeline 1.2.4 (6 June 2013)
 ===============================
 

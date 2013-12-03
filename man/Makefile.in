@@ -99,6 +99,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/pipeline-socketpair.m4 \
 	$(top_srcdir)/gnulib/m4/include_next.m4 \
 	$(top_srcdir)/gnulib/m4/intmax_t.m4 \
 	$(top_srcdir)/gnulib/m4/inttypes_h.m4 \
+	$(top_srcdir)/gnulib/m4/largefile.m4 \
 	$(top_srcdir)/gnulib/m4/lib-ignore.m4 \
 	$(top_srcdir)/gnulib/m4/lib-ld.m4 \
 	$(top_srcdir)/gnulib/m4/lib-link.m4 \
