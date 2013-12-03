@@ -1,5 +1,5 @@
-libpipeline 1.2.5
-=================
+libpipeline 1.2.5 (3 December 2013)
+===================================
 
 pipeline_want_infile and pipeline_want_outfile now take copies of their file
 name arguments.
