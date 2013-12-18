@@ -100,6 +100,11 @@ START_TEST (test_pump_tee)
 	pipeline_want_outfile (sink_function, function_outfile);
 	pipeline_connect (source, sink_process, sink_function, NULL);
 	pipeline_pump (source, sink_process, sink_function, NULL);
+	fail_unless (pipeline_wait (source) == 0, "source did not return 0");
+	fail_unless (pipeline_wait (sink_process) == 0,
+		     "process sink did not return 0");
+	fail_unless (pipeline_wait (sink_function) == 0,
+		     "function sink did not return 0");
 	fail_unless_files_equal (process_outfile, function_outfile);
 
 	free (function_outfile);

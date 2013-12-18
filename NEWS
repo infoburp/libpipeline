@@ -1,3 +1,9 @@
+libpipeline 1.2.6
+=================
+
+Fix test_pump_tee to wait for its child processes before testing their
+output, since otherwise not all their output might be flushed.
+
 libpipeline 1.2.5 (3 December 2013)
 ===================================
 
