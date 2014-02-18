@@ -87,6 +87,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/pipeline-socketpair.m4 \
 	$(top_srcdir)/gnulib/m4/00gnulib.m4 \
+	$(top_srcdir)/gnulib/m4/absolute-header.m4 \
 	$(top_srcdir)/gnulib/m4/alloca.m4 \
 	$(top_srcdir)/gnulib/m4/dirname.m4 \
 	$(top_srcdir)/gnulib/m4/double-slash-root.m4 \
@@ -98,6 +99,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/pipeline-socketpair.m4 \
 	$(top_srcdir)/gnulib/m4/extensions.m4 \
 	$(top_srcdir)/gnulib/m4/extern-inline.m4 \
 	$(top_srcdir)/gnulib/m4/float_h.m4 \
+	$(top_srcdir)/gnulib/m4/gettimeofday.m4 \
 	$(top_srcdir)/gnulib/m4/gnulib-common.m4 \
 	$(top_srcdir)/gnulib/m4/gnulib-comp.m4 \
 	$(top_srcdir)/gnulib/m4/include_next.m4 \
@@ -870,16 +872,19 @@ REPLACE_FUTIMENS = @REPLACE_FUTIMENS@
 REPLACE_GETCWD = @REPLACE_GETCWD@
 REPLACE_GETDELIM = @REPLACE_GETDELIM@
 REPLACE_GETDOMAINNAME = @REPLACE_GETDOMAINNAME@
+REPLACE_GETDTABLESIZE = @REPLACE_GETDTABLESIZE@
 REPLACE_GETGROUPS = @REPLACE_GETGROUPS@
 REPLACE_GETLINE = @REPLACE_GETLINE@
 REPLACE_GETLOGIN_R = @REPLACE_GETLOGIN_R@
 REPLACE_GETPAGESIZE = @REPLACE_GETPAGESIZE@
 REPLACE_GETTIMEOFDAY = @REPLACE_GETTIMEOFDAY@
+REPLACE_GMTIME = @REPLACE_GMTIME@
 REPLACE_ISATTY = @REPLACE_ISATTY@
 REPLACE_ITOLD = @REPLACE_ITOLD@
 REPLACE_LCHOWN = @REPLACE_LCHOWN@
 REPLACE_LINK = @REPLACE_LINK@
 REPLACE_LINKAT = @REPLACE_LINKAT@
+REPLACE_LOCALTIME = @REPLACE_LOCALTIME@
 REPLACE_LOCALTIME_R = @REPLACE_LOCALTIME_R@
 REPLACE_LSEEK = @REPLACE_LSEEK@
 REPLACE_LSTAT = @REPLACE_LSTAT@

@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# Copyright (C) 2002-2013 Free Software Foundation, Inc.
+# Copyright (C) 2002-2014 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -109,6 +109,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/pipeline-socketpair.m4 \
 	$(top_srcdir)/gnulib/m4/00gnulib.m4 \
+	$(top_srcdir)/gnulib/m4/absolute-header.m4 \
 	$(top_srcdir)/gnulib/m4/alloca.m4 \
 	$(top_srcdir)/gnulib/m4/dirname.m4 \
 	$(top_srcdir)/gnulib/m4/double-slash-root.m4 \
@@ -120,6 +121,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/pipeline-socketpair.m4 \
 	$(top_srcdir)/gnulib/m4/extensions.m4 \
 	$(top_srcdir)/gnulib/m4/extern-inline.m4 \
 	$(top_srcdir)/gnulib/m4/float_h.m4 \
+	$(top_srcdir)/gnulib/m4/gettimeofday.m4 \
 	$(top_srcdir)/gnulib/m4/gnulib-common.m4 \
 	$(top_srcdir)/gnulib/m4/gnulib-comp.m4 \
 	$(top_srcdir)/gnulib/m4/include_next.m4 \
@@ -909,16 +911,19 @@ REPLACE_FUTIMENS = @REPLACE_FUTIMENS@
 REPLACE_GETCWD = @REPLACE_GETCWD@
 REPLACE_GETDELIM = @REPLACE_GETDELIM@
 REPLACE_GETDOMAINNAME = @REPLACE_GETDOMAINNAME@
+REPLACE_GETDTABLESIZE = @REPLACE_GETDTABLESIZE@
 REPLACE_GETGROUPS = @REPLACE_GETGROUPS@
 REPLACE_GETLINE = @REPLACE_GETLINE@
 REPLACE_GETLOGIN_R = @REPLACE_GETLOGIN_R@
 REPLACE_GETPAGESIZE = @REPLACE_GETPAGESIZE@
 REPLACE_GETTIMEOFDAY = @REPLACE_GETTIMEOFDAY@
+REPLACE_GMTIME = @REPLACE_GMTIME@
 REPLACE_ISATTY = @REPLACE_ISATTY@
 REPLACE_ITOLD = @REPLACE_ITOLD@
 REPLACE_LCHOWN = @REPLACE_LCHOWN@
 REPLACE_LINK = @REPLACE_LINK@
 REPLACE_LINKAT = @REPLACE_LINKAT@
+REPLACE_LOCALTIME = @REPLACE_LOCALTIME@
 REPLACE_LOCALTIME_R = @REPLACE_LOCALTIME_R@
 REPLACE_LSEEK = @REPLACE_LSEEK@
 REPLACE_LSTAT = @REPLACE_LSTAT@
@@ -1090,7 +1095,7 @@ noinst_LIBRARIES =
 noinst_LTLIBRARIES = libgnu.la
 EXTRA_DIST = alloca.in.h stripslash.c dirname.h dosname.h errno.in.h \
 	error.c error.h exitfail.h float.c float.in.h itold.c \
-	$(top_srcdir)/tools/gitlog-to-changelog \
+	gettimeofday.c $(top_srcdir)/tools/gitlog-to-changelog \
 	$(top_srcdir)/tools/gnupload $(top_srcdir)/tools/config.rpath \
 	intprops.h malloc.c malloca.h malloca.valgrind memchr.c \
 	memchr.valgrind msvc-inval.c msvc-inval.h msvc-nothrow.c \
@@ -1150,13 +1155,19 @@ libgnu_la_SOURCES = dirname.c basename.c dirname-lgpl.c \
 libgnu_la_LIBADD = $(gl_LTLIBOBJS)
 libgnu_la_DEPENDENCIES = $(gl_LTLIBOBJS)
 EXTRA_libgnu_la_SOURCES = stripslash.c error.c float.c itold.c \
-	malloc.c memchr.c msvc-inval.c msvc-nothrow.c raise.c read.c \
-	safe-read.c setenv.c sigaction.c sigprocmask.c snprintf.c \
-	strerror.c strerror-override.c strndup.c strnlen.c strsignal.c \
-	unsetenv.c asnprintf.c printf-args.c printf-parse.c \
-	vasnprintf.c asprintf.c vasprintf.c waitpid.c write.c
+	gettimeofday.c malloc.c memchr.c msvc-inval.c msvc-nothrow.c \
+	raise.c read.c safe-read.c setenv.c sigaction.c sigprocmask.c \
+	snprintf.c strerror.c strerror-override.c strndup.c strnlen.c \
+	strsignal.c unsetenv.c asnprintf.c printf-args.c \
+	printf-parse.c vasnprintf.c asprintf.c vasprintf.c waitpid.c \
+	write.c
 libgnu_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(LTLIBINTL) \
 	$(LTLIBTHREAD)
+
+# Use this preprocessor expression to decide whether #include_next works.
+# Do not rely on a 'configure'-time test for this, since the expression
+# might appear in an installed header, which is used by some other compiler.
+HAVE_INCLUDE_NEXT = (__GNUC__ || 60000000 <= __DECC_VER)
 
 # Because this Makefile snippet defines a variable used by other
 # gnulib Makefile snippets, it must be present in all Makefile.am that
@@ -1248,6 +1259,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exitfail.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/float.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettimeofday.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/itold.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/malloc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/malloca.Plo@am__quote@
@@ -2247,6 +2259,7 @@ time.h: time.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_TIME_H''@|$(NEXT_TIME_H)|g' \
+	      -e 's/@''GNULIB_GETTIMEOFDAY''@/$(GNULIB_GETTIMEOFDAY)/g' \
 	      -e 's/@''GNULIB_MKTIME''@/$(GNULIB_MKTIME)/g' \
 	      -e 's/@''GNULIB_NANOSLEEP''@/$(GNULIB_NANOSLEEP)/g' \
 	      -e 's/@''GNULIB_STRPTIME''@/$(GNULIB_STRPTIME)/g' \
@@ -2256,6 +2269,8 @@ time.h: time.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(
 	      -e 's|@''HAVE_NANOSLEEP''@|$(HAVE_NANOSLEEP)|g' \
 	      -e 's|@''HAVE_STRPTIME''@|$(HAVE_STRPTIME)|g' \
 	      -e 's|@''HAVE_TIMEGM''@|$(HAVE_TIMEGM)|g' \
+	      -e 's|@''REPLACE_GMTIME''@|$(REPLACE_GMTIME)|g' \
+	      -e 's|@''REPLACE_LOCALTIME''@|$(REPLACE_LOCALTIME)|g' \
 	      -e 's|@''REPLACE_LOCALTIME_R''@|$(REPLACE_LOCALTIME_R)|g' \
 	      -e 's|@''REPLACE_MKTIME''@|$(REPLACE_MKTIME)|g' \
 	      -e 's|@''REPLACE_NANOSLEEP''@|$(REPLACE_NANOSLEEP)|g' \
@@ -2383,6 +2398,7 @@ unistd.h: unistd.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H
 	      -e 's|@''REPLACE_FTRUNCATE''@|$(REPLACE_FTRUNCATE)|g' \
 	      -e 's|@''REPLACE_GETCWD''@|$(REPLACE_GETCWD)|g' \
 	      -e 's|@''REPLACE_GETDOMAINNAME''@|$(REPLACE_GETDOMAINNAME)|g' \
+	      -e 's|@''REPLACE_GETDTABLESIZE''@|$(REPLACE_GETDTABLESIZE)|g' \
 	      -e 's|@''REPLACE_GETLOGIN_R''@|$(REPLACE_GETLOGIN_R)|g' \
 	      -e 's|@''REPLACE_GETGROUPS''@|$(REPLACE_GETGROUPS)|g' \
 	      -e 's|@''REPLACE_GETPAGESIZE''@|$(REPLACE_GETPAGESIZE)|g' \
