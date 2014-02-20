@@ -83,14 +83,17 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in $(dist_noinst_DATA) COPYING INSTALL NEWS \
-	README TODO tools/ar-lib tools/compile tools/config.guess \
-	tools/config.rpath tools/config.sub tools/depcomp \
-	tools/install-sh tools/missing tools/ltmain.sh \
-	$(top_srcdir)/tools/ar-lib $(top_srcdir)/tools/compile \
-	$(top_srcdir)/tools/config.guess \
-	$(top_srcdir)/tools/config.rpath \
-	$(top_srcdir)/tools/config.sub $(top_srcdir)/tools/install-sh \
-	$(top_srcdir)/tools/ltmain.sh $(top_srcdir)/tools/missing
+	README TODO build-aux/ar-lib build-aux/compile \
+	build-aux/config.guess build-aux/config.rpath \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/missing build-aux/ltmain.sh \
+	$(top_srcdir)/build-aux/ar-lib $(top_srcdir)/build-aux/compile \
+	$(top_srcdir)/build-aux/config.guess \
+	$(top_srcdir)/build-aux/config.rpath \
+	$(top_srcdir)/build-aux/config.sub \
+	$(top_srcdir)/build-aux/install-sh \
+	$(top_srcdir)/build-aux/ltmain.sh \
+	$(top_srcdir)/build-aux/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/pipeline-socketpair.m4 \
 	$(top_srcdir)/gnulib/m4/00gnulib.m4 \
@@ -1558,7 +1561,7 @@ dist-hook: gen-ChangeLog
 .PHONY: gen-ChangeLog
 gen-ChangeLog:
 	$(AM_V_GEN)if test -d .git; then \
-		$(top_srcdir)/tools/gitlog-to-changelog \
+		$(top_srcdir)/build-aux/gitlog-to-changelog \
 			--format='%s%n%n%b%n' \
 			--since="$(gen_start_date)" > $(distdir)/cl-t; \
 		rm -f $(distdir)/ChangeLog; \

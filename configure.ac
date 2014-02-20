@@ -23,7 +23,7 @@ m4_pattern_forbid([^PIPELINE_])
 
 # Initialise and check we're in the correct directory.
 AC_INIT([libpipeline], [1.2.6], [cjwatson@debian.org])
-AC_CONFIG_AUX_DIR([tools])
+AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([1.10 -Wall -Werror foreign])
 AM_MAINTAINER_MODE
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
