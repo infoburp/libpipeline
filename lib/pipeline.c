@@ -611,7 +611,7 @@ void pipecmd_dump (pipecmd *cmd, FILE *stream)
 				 cmd->env[i].value ? cmd->env[i].value
 						   : "<unset>");
 		else
-			fprintf (stream, "env -i ");
+			fputs ("env -i ", stream);
 	}
 
 	switch (cmd->tag) {
