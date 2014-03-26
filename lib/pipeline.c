@@ -103,6 +103,7 @@ pipecmd *pipecmd_new (const char *name)
 	cmd->name = xstrdup (name);
 	cmd->nice = 0;
 	cmd->discard_err = 0;
+	cmd->cwd = NULL;
 
 	cmd->nenv = 0;
 	cmd->env_max = 4;
@@ -297,6 +298,7 @@ pipecmd *pipecmd_new_function (const char *name,
 	cmd->name = xstrdup (name);
 	cmd->nice = 0;
 	cmd->discard_err = 0;
+	cmd->cwd = NULL;
 
 	cmd->nenv = 0;
 	cmd->env_max = 4;
@@ -321,6 +323,7 @@ pipecmd *pipecmd_new_sequencev (const char *name, va_list cmdv)
 	cmd->name = xstrdup (name);
 	cmd->nice = 0;
 	cmd->discard_err = 0;
+	cmd->cwd = NULL;
 
 	cmd->nenv = 0;
 	cmd->env_max = 4;
@@ -382,6 +385,7 @@ pipecmd *pipecmd_dup (pipecmd *cmd)
 	newcmd->name = xstrdup (cmd->name);
 	newcmd->nice = cmd->nice;
 	newcmd->discard_err = cmd->discard_err;
+	newcmd->cwd = cmd->cwd ? xstrdup (cmd->cwd) : NULL;
 
 	newcmd->nenv = cmd->nenv;
 	newcmd->env_max = cmd->env_max;
@@ -531,6 +535,12 @@ void pipecmd_discard_err (pipecmd *cmd, int discard_err)
 	cmd->discard_err = discard_err;
 }
 
+void pipecmd_chdir (pipecmd *cmd, const char *directory)
+{
+	free (cmd->cwd);
+	cmd->cwd = xstrdup (directory);
+}
+
 void pipecmd_setenv (pipecmd *cmd, const char *name, const char *value)
 {
 	if (cmd->nenv >= cmd->env_max) {
@@ -591,6 +601,9 @@ void pipecmd_dump (pipecmd *cmd, FILE *stream)
 {
 	int i;
 
+	if (cmd->cwd)
+		fprintf (stream, "(cd %s && ", cmd->cwd);
+
 	for (i = 0; i < cmd->nenv; ++i) {
 		if (cmd->env[i].name)
 			fprintf (stream, "%s=%s ",
@@ -633,12 +646,18 @@ void pipecmd_dump (pipecmd *cmd, FILE *stream)
 			break;
 		}
 	}
+
+	if (cmd->cwd)
+		putc (')', stream);
 }
 
 char *pipecmd_tostring (pipecmd *cmd)
 {
 	char *out = NULL;
 	int i;
+
+	if (cmd->cwd)
+		out = appendstr (out, "(cd ", cmd->cwd, " && ", NULL);
 
 	for (i = 0; i < cmd->nenv; ++i) {
 		if (cmd->env[i].name)
@@ -685,6 +704,9 @@ char *pipecmd_tostring (pipecmd *cmd)
 		}
 	}
 
+	if (cmd->cwd)
+		out = appendstr (out, ")", NULL);
+
 	return out;
 }
 
@@ -709,6 +731,12 @@ void pipecmd_exec (pipecmd *cmd)
 			dup2 (devnull, 2);
 			close (devnull);
 		}
+	}
+
+	if (cmd->cwd) {
+		if (chdir (cmd->cwd) < 0)
+			error (EXEC_FAILED_EXIT_STATUS, errno,
+			       "can't change directory to '%s'", cmd->cwd);
 	}
 
 	for (i = 0; i < cmd->nenv; ++i) {
@@ -838,6 +866,7 @@ void pipecmd_free (pipecmd *cmd)
 		return;
 
 	free (cmd->name);
+	free (cmd->cwd);
 
 	for (i = 0; i < cmd->nenv; ++i) {
 		free (cmd->env[i].name);

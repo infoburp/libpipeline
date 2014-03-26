@@ -25,6 +25,9 @@
 
 #include <string.h>
 
+#include "dirname.h"
+#include "xalloc.h"
+
 #include "common.h"
 
 const char *program_name = "basic";
@@ -212,6 +215,33 @@ START_TEST (test_basic_clearenv)
 }
 END_TEST
 
+START_TEST (test_basic_chdir)
+{
+	pipeline *p;
+	char *line, *end;
+	char *child_base, *expected_base;
+
+	p = pipeline_new_command_args ("pwd", NULL);
+	pipecmd_chdir (pipeline_get_command (p, 0), temp_dir);
+	pipeline_want_out (p, -1);
+	pipeline_start (p);
+	line = xstrdup (pipeline_readline (p));
+	end = line + strlen (line);
+	if (end > line && *(end - 1) == '\n')
+		*(end - 1) = '\0';
+	child_base = base_name (line);
+	expected_base = base_name (temp_dir);
+	fail_unless (!strcmp (child_base, expected_base),
+		     "child base name was '%s', expected '%s'",
+		     child_base, expected_base);
+	free (expected_base);
+	free (child_base);
+	free (line);
+	pipeline_wait (p);
+	pipeline_free (p);
+}
+END_TEST
+
 START_TEST (test_basic_sequence)
 {
 	pipeline *p;
@@ -245,6 +275,8 @@ Suite *basic_suite (void)
 	TEST_CASE (s, basic, setenv);
 	TEST_CASE (s, basic, unsetenv);
 	TEST_CASE (s, basic, clearenv);
+	TEST_CASE_WITH_FIXTURE (s, basic, chdir,
+				temp_dir_setup, temp_dir_teardown);
 	TEST_CASE (s, basic, sequence);
 
 	return s;

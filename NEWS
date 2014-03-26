@@ -1,3 +1,8 @@
+libpipeline 1.2.7
+=================
+
+Add `pipecmd_chdir' to run a command with a different working directory.
+
 libpipeline 1.2.6 (18 December 2013)
 ====================================
 

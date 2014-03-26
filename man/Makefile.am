@@ -39,6 +39,7 @@ FUNCTIONS = \
 	pipecmd_get_nargs \
 	pipecmd_nice \
 	pipecmd_discard_err \
+	pipecmd_chdir \
 	pipecmd_setenv \
 	pipecmd_unsetenv \
 	pipecmd_clearenv \

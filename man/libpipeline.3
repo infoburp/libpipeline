@@ -204,6 +204,12 @@ is non-zero, redirect this command's standard error to
 Otherwise, and by default, pass it through.
 This is usually a bad idea.
 .Pp
+.It Ft void Fn pipecmd_chdir "pipecmd *cmd" "const char *directory"
+.Pp
+Change the working directory to
+.Va directory
+while running this command.
+.Pp
 .It Xo Ft void
 .Fn pipecmd_setenv "pipecmd *cmd" "const char *name" "const char *value"
 .Xc
