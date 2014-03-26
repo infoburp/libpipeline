@@ -1065,7 +1065,7 @@ include_HEADERS = pipeline.h
 libpipeline_la_LIBADD = ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libpipeline_la_LDFLAGS = \
 	-export-symbols-regex '^(pipecmd|pipeline)_' \
-	-version-info 3:6:2
+	-version-info 4:0:3
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libpipeline.pc
