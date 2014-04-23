@@ -90,6 +90,7 @@ START_TEST (test_inspect_pid)
 	pipeline_want_out (p, -1);
 	pipeline_start (p);
 	line = pipeline_readline (p);
+	fail_unless (line != NULL);
 	pid = (pid_t) atol (line);
 	fail_unless (pid == pipeline_get_pid (p, 0), "pids match");
 	/* Note that this test may hang if pipeline_get_pid does not work.

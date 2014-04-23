@@ -53,6 +53,7 @@ then
 	gl_WARN_ADD([-Wno-missing-field-initializers])
 fi
 AC_PROG_LN_S
+AC_DEFINE_UNQUOTED([SHELL], ["$SHELL"], [A POSIX shell interpreter.])
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [run_tests=yes], [run_tests=no])
 AM_CONDITIONAL([RUN_TESTS], [test "x$run_tests" = xyes])
 

@@ -14957,6 +14957,11 @@ $as_echo "no, using $LN_S" >&6; }
 fi
 
 
+cat >>confdefs.h <<_ACEOF
+#define SHELL "$SHELL"
+_ACEOF
+
+
 
 
 

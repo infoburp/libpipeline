@@ -58,6 +58,7 @@ START_TEST (test_redirect_files)
 	pipeline_want_out (p, -1);
 	pipeline_start (p);
 	line = pipeline_readline (p);
+	fail_unless (line != NULL);
 	fail_unless (!strcmp (line, "test data out\n"));
 
 	fclose (fh);
